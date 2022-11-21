@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.louis.mango.admin.dao.PageMapper">
+    <resultMap id="BaseResultMap" type="com.louis.mango.admin.model.Page">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="path" jdbcType="VARCHAR" property="path" />
+        <result column="cListStr" jdbcType="VARCHAR" property="cListStr" />
+    </resultMap>
+    <select id="getPages" parameterType="java.util.LinkedHashMap" resultMap="BaseResultMap">
+        select * from page
+        <where>
+            <if test="name != null">
+                name like '%${name}%'
+            </if>
+            <if test="path != null">
+                path like '%${code}%'
+            </if>
+        </where>
+    </select>
+    <select id="getByPath" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from page where path = #{path}
+    </select>
+    <insert id="addPage" parameterType="com.louis.mango.admin.model.Page" >
+        insert into page (name,path,cListStr) values (#{name, jdbcType=VARCHAR}, #{path, jdbcType=VARCHAR},#{cListStr, jdbcType=VARCHAR})
+    </insert>
+    <update id="updatePage" parameterType="com.louis.mango.admin.model.Page">
+        update page
+         <set>
+             <if test="name != null">
+                 name = #{name},
+             </if>
+             <if test="path != null">
+                 path = #{path},
+             </if>
+             <if test="cListStr != null">
+                 cListStr = #{cListStr},
+             </if>
+         </set>
+         where id = #{id}
+    </update>
+    <delete id="delPage" parameterType="java.lang.Long" >
+        delete from page where id = #{id, jdbcType=BIGINT}
+    </delete>
+    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select * from page where id = #{id, jdbcType=BIGINT}
+    </select>
+</mapper>

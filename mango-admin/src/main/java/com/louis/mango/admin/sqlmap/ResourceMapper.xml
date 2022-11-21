@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.louis.mango.admin.dao.ResourceMapper">
+    <resultMap id="BaseResultMap" type="com.louis.mango.admin.model.Resource">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="atomId" jdbcType="VARCHAR" property="atomId" />
+    </resultMap>
+    <select id="getResources" parameterType="java.util.LinkedHashMap" resultMap="BaseResultMap">
+        select resource.id as id, code, atomId, atom.type as type from resource
+        left join atom on atom.id = resource.atomId
+        <where>
+            <if test="code != null">
+                code like '%${code}%'
+            </if>
+            <if test="atomId != null">
+                and atomId = #{atomId}
+            </if>
+        </where>
+    </select>
+    <select id="getByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from resource where code = #{code}
+    </select>
+    <insert id="addResource" parameterType="com.louis.mango.admin.model.Resource" >
+        insert into resource (atomId,code) values (#{atomId, jdbcType=VARCHAR},#{code, jdbcType=VARCHAR})
+    </insert>
+    <update id="updateResource" parameterType="com.louis.mango.admin.model.Resource">
+        update resource set configObjStr = #{configObjStr} where id = #{id}
+    </update>
+    <delete id="delResource" parameterType="java.lang.Long" >
+        delete from resource where id = #{id, jdbcType=BIGINT}
+    </delete>
+    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select * from resource where id = #{id, jdbcType=BIGINT}
+    </select>
+</mapper>
